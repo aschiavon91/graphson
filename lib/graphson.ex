@@ -3,9 +3,9 @@ defmodule Graphson do
   Documentation for `Graphson`.
   """
 
+  alias Graphson.Edge
   alias Graphson.Vertex
   alias Graphson.VertexProperty
-  alias Graphson.Edge
 
   def decode(%{"@type" => "g:Vertex", "@value" => value}) do
     Vertex.new(value)
@@ -49,10 +49,11 @@ defmodule Graphson do
     decode(value)
   end
 
+  # TODO: Improve property conversion.
+  # for now, this will create a map with string keys
+  # maybe we could implement it in a betterway
   def decode(properties) when is_map(properties) do
     Enum.reduce(properties, %{}, fn {label, property}, acc ->
-      # FIXME: we need a better way to convert this keys, or just let this as string
-      label = String.to_atom(label)
       values = decode(property)
       Map.put(acc, label, values)
     end)

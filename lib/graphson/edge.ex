@@ -1,7 +1,7 @@
 defmodule Graphson.Edge do
   alias Graphson.Vertex
 
-  @type t :: %__MODULE__{
+  @type t() :: %__MODULE__{
           label: String.t(),
           id: number(),
           properties: map(),

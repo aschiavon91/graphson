@@ -2,7 +2,8 @@ defmodule Graphson.Vertex do
   alias Graphson.VertexProperty
 
   @type vertex_id :: number()
-  @type t :: %__MODULE__{
+
+  @type t() :: %__MODULE__{
           label: String.t(),
           id: vertex_id,
           properties: VertexProperty.t(vertex_id) | nil
@@ -28,7 +29,7 @@ defmodule Graphson.Vertex do
     %__MODULE__{id: id, label: label, properties: properties}
   end
 
-  def new(_), do: raise RuntimeError, "#{__MODULE__}.new/1 invalid arguments"
+  def new(_), do: raise(RuntimeError, "#{__MODULE__}.new/1 invalid arguments")
 
   def add_properties(%__MODULE__{properties: nil} = vertex, properties) do
     %__MODULE__{vertex | properties: properties}
