@@ -4,7 +4,7 @@ defmodule Graphson.MixProject do
   def project do
     [
       app: :graphson,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -18,7 +18,7 @@ defmodule Graphson.MixProject do
 
   defp description do
     """
-    A simple (and **incomplete**) Graphson encoder and decoder.
+    A simple (and **incomplete**) Graphson decoder.
     """
   end
 
