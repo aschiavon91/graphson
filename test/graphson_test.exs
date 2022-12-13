@@ -1,19 +1,19 @@
 defmodule GraphsonTest do
   use ExUnit.Case
 
-  describe "decode/1" do
+  describe "decode!/1" do
     test "g:Class" do
-      assert "SomeClass" == Graphson.decode(%{"@type" => "g:Class", "@value" => "SomeClass"})
+      assert "SomeClass" == Graphson.decode!(%{"@type" => "g:Class", "@value" => "SomeClass"})
     end
 
     test "g:Date" do
       assert ~U[2016-12-14 21:14:36.295Z] ==
-               Graphson.decode(%{"@type" => "g:Date", "@value" => 1_481_750_076_295})
+               Graphson.decode!(%{"@type" => "g:Date", "@value" => 1_481_750_076_295})
     end
 
     test "g:Double" do
       assert 100.0 ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:Double",
                  "@value" => 100.0
                })
@@ -21,7 +21,7 @@ defmodule GraphsonTest do
 
     test "g:Float" do
       assert 100.0 ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:Float",
                  "@value" => 100.0
                })
@@ -29,7 +29,7 @@ defmodule GraphsonTest do
 
     test "g:Int32" do
       assert 100 ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:Int32",
                  "@value" => 100
                })
@@ -37,7 +37,7 @@ defmodule GraphsonTest do
 
     test "g:Int64" do
       assert 100 ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:Int64",
                  "@value" => 100
                })
@@ -45,7 +45,7 @@ defmodule GraphsonTest do
 
     test "g:List" do
       assert [1, "person", true] ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:List",
                  "@value" => [
                    %{
@@ -100,7 +100,7 @@ defmodule GraphsonTest do
                ~U[2016-12-14 21:14:36.295Z] => "red",
                [1, 2, 3] => ~U[2016-12-14 21:14:36.295Z],
                "test" => 123
-             } == Graphson.decode(unparsed)
+             } == Graphson.decode!(unparsed)
     end
 
     test "g:Set" do
@@ -116,12 +116,12 @@ defmodule GraphsonTest do
         ]
       }
 
-      assert %MapSet{map: %{1 => [], true => [], "person" => []}} == Graphson.decode(unparsed)
+      assert %MapSet{map: %{1 => [], true => [], "person" => []}} == Graphson.decode!(unparsed)
     end
 
     test "g:Timestamp" do
       assert ~U[2016-12-14 21:14:36.295Z] ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:Timestamp",
                  "@value" => 1_481_750_076_295
                })
@@ -129,7 +129,7 @@ defmodule GraphsonTest do
 
     test "g:UUID" do
       assert "41d2e28a-20a4-4ab0-b379-d810dede3786" ==
-               Graphson.decode(%{
+               Graphson.decode!(%{
                  "@type" => "g:UUID",
                  "@value" => "41d2e28a-20a4-4ab0-b379-d810dede3786"
                })
@@ -174,8 +174,8 @@ defmodule GraphsonTest do
                in_vertex: %Graphson.Vertex{id: 10, label: "software", properties: nil},
                label: "develops",
                out_vertex: %Graphson.Vertex{id: 1, label: "person", properties: nil},
-               properties: %{since: 2009}
-             } == Graphson.decode(unparsed)
+               properties: %{"since" => 2009}
+             } == Graphson.decode!(unparsed)
     end
 
     test "g:Vertex" do
@@ -291,7 +291,7 @@ defmodule GraphsonTest do
                id: 1,
                label: "person",
                properties: %{
-                 location: [
+                 "location" => [
                    %Graphson.VertexProperty{
                      id: 6,
                      label: "location",
@@ -317,11 +317,11 @@ defmodule GraphsonTest do
                      vertex: nil
                    }
                  ],
-                 name: [
+                 "name" => [
                    %Graphson.VertexProperty{id: 0, label: "name", value: "marko", vertex: nil}
                  ]
                }
-             } == Graphson.decode(unparsed)
+             } == Graphson.decode!(unparsed)
     end
 
     test "g:VertexProperty" do
@@ -343,7 +343,7 @@ defmodule GraphsonTest do
                value: "marko",
                vertex: nil
              } ==
-               Graphson.decode(unparsed)
+               Graphson.decode!(unparsed)
     end
 
     test "g:Path" do
@@ -405,14 +405,14 @@ defmodule GraphsonTest do
         }
       }
 
-      assert %{
+      assert %Graphson.Path{
                labels: [%MapSet{}, %MapSet{}, %MapSet{}],
                objects: [
                  %Graphson.Vertex{id: 1, label: "person", properties: %{}},
                  %Graphson.Vertex{id: 10, label: "software", properties: %{}},
                  %Graphson.Vertex{id: 11, label: "software", properties: %{}}
                ]
-             } == Graphson.decode(unparsed)
+             } == Graphson.decode!(unparsed)
     end
   end
 end

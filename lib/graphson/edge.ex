@@ -1,7 +1,7 @@
 defmodule Graphson.Edge do
   alias Graphson.Vertex
 
-  @type t :: %__MODULE__{
+  @type t() :: %__MODULE__{
           label: String.t(),
           id: number(),
           properties: map(),
@@ -14,17 +14,27 @@ defmodule Graphson.Edge do
   @enforce_keys [:label, :id, :in_vertex, :out_vertex, :properties]
   defstruct [:label, :id, :in_vertex, :out_vertex, :properties]
 
-  def new(
-        id,
-        label,
-        in_vertex_id,
-        in_vertex_label,
-        out_vertex_id,
-        out_vertex_label,
-        properties \\ %{}
+  def new!(
+        %{
+          "id" => edge_id,
+          "inV" => in_v,
+          "inVLabel" => in_v_label,
+          "label" => label,
+          "outV" => out_v,
+          "outVLabel" => out_v_label
+        } = value
       ) do
-    in_vertex = %Vertex{id: in_vertex_id, label: in_vertex_label}
-    out_vertex = %Vertex{id: out_vertex_id, label: out_vertex_label}
+    id = Graphson.decode!(edge_id)
+    in_v_id = Graphson.decode!(in_v)
+    out_v_id = Graphson.decode!(out_v)
+
+    properties =
+      value
+      |> Map.get("properties", %{})
+      |> Graphson.decode!()
+
+    in_vertex = %Vertex{id: in_v_id, label: in_v_label}
+    out_vertex = %Vertex{id: out_v_id, label: out_v_label}
 
     %__MODULE__{
       id: id,
@@ -35,35 +45,5 @@ defmodule Graphson.Edge do
     }
   end
 
-  def new(
-        %{
-          "id" => edge_id,
-          "inV" => in_v,
-          "inVLabel" => in_v_label,
-          "label" => label,
-          "outV" => out_v,
-          "outVLabel" => out_v_label
-        } = value
-      ) do
-    id = Graphson.decode(edge_id)
-    in_v_id = Graphson.decode(in_v)
-    out_v_id = Graphson.decode(out_v)
-
-    properties =
-      value
-      |> Map.get("properties", %{})
-      |> Graphson.decode()
-
-    new(
-      id,
-      label,
-      in_v_id,
-      in_v_label,
-      out_v_id,
-      out_v_label,
-      properties
-    )
-  end
-
-  def new(_), do: raise RuntimeError, "#{__MODULE__}.new/1 invalid arguments"
+  def new!(_), do: raise(RuntimeError, "#{__MODULE__}.new/1 invalid arguments")
 end

@@ -11,7 +11,7 @@ defmodule Graphson.VertexProperty do
 
   defstruct [:label, :id, :value, :vertex]
 
-  def new(%{
+  def new!(%{
         "id" => %{"@value" => id},
         "vertex" => %{"@value" => vertex_id},
         "value" => value,
@@ -20,9 +20,9 @@ defmodule Graphson.VertexProperty do
     %__MODULE__{label: label, id: id, vertex: vertex_id, value: value}
   end
 
-  def new(%{"id" => %{"@value" => id}, "label" => label, "value" => value}) do
+  def new!(%{"id" => %{"@value" => id}, "label" => label, "value" => value}) do
     %__MODULE__{label: label, id: id, value: value}
   end
 
-  def new(_), do: raise RuntimeError, "#{__MODULE__}.new/1 invalid arguments"
+  def new!(_), do: raise RuntimeError, "#{__MODULE__}.new/1 invalid arguments"
 end
